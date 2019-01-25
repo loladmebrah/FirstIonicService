@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>inside</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  Authorized entry
+  <p>{{data}}</p>
+
+  <ion-button expand="full" (click)="loadSpecialInfo()">Show hidden data</ion-button>
+  <ion-button expand="full" (click)="logout()">Logout</ion-button>
+  <ion-button expand="full" (click)="clearToken()">clearToken</ion-button>
+
+</ion-content>
