@@ -1,8 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var mongoose = require('mongoose');
-var config = require('./config/config');
+//var mongoose = require('mongoose');
+//var session = require('express-session');
+//var config = require('./config/config');
 var cors = require('cors');
 var port = process.env.PORT || 5000;
 
@@ -32,12 +33,6 @@ app.get('/', function(req, res){
 
 var routes = require('./routes.js');
 app.use('/api', routes);
-
-mongoose.connect(config.dbm, {useNewUrlParser: true, useCreateIndex: true});
-const connection = mongoose.connection;
-
-connection.once('open', ()=>{console.log('MongoDB database conn success!')});
-connection.once('error', (err)=>{console.log('MongoDB database conn error! '+err); process.exit()});
 
 app.listen(port);
 console.log('Hello! The API is at http://localhost:'+port+'/api');

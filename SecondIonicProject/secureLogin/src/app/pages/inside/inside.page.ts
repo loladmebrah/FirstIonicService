@@ -3,7 +3,6 @@ import { AuthService } from '../../services/auth.service';
 import { Storage } from '@ionic/storage';
 import { ToastController } from '@ionic/angular';
 
-
 @Component({
   selector: 'app-inside',
   templateUrl: './inside.page.html',

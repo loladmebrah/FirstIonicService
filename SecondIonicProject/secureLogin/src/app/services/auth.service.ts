@@ -7,9 +7,7 @@ import { environment } from '../../environments/environment';
 import { tap, catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
-
 const TOKEN_KEY = 'access_token';
-
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +30,6 @@ export class AuthService {
       if(token){
         let decoded= this.helper.decodeToken(token);
         let isExpired = this.helper.isTokenExpired(token);
-
         if(!isExpired){
           this.user = decoded;
           this.authenticationState.next(true);
