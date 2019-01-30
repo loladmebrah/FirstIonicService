@@ -4,7 +4,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 
 function createToken(user){
-    return jwt.sign({ id: user.id, username: user.username}, config.jwtSecret, {
+    return jwt.sign({id: user.accountid}, config.jwtSecret, {
         expiresIn:60
     });
 }

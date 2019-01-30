@@ -25,9 +25,17 @@ function searchForUser(user, callback){
     return callback;
 }
 
+function identifyUser(user, callback){
+    const query = singleSelect('tuser', '*', 'accountid');
+    pool.query(query, [user.id], (err, res) => {
+        callback(err, res.rows);
+    });
+    return callback;
+}
+
 function insertUser(user, callback){
-    const query = Insert('tuser',['username','password','accountnumber','email']);
-    const values = [user.username,user.password,user.accountnumber,user.email];
+    const query = Insert('tuser',['username','password','accountnumber','email','accountid']);
+    const values = [user.username,user.password,user.accountnumber,user.email, user.accountid];
     pool.query(query, values, (err, res) => {
         if(res)
             callback(err, res.rows);
@@ -40,6 +48,9 @@ function insertUser(user, callback){
 module.exports = {
     Find: function(usr, cb){
         return searchForUser(usr, cb);
+    },
+    Identify: function(usr, cb){
+        return identifyUser(usr, cb);
     },
     InsertUser: function(user, cb){
         return insertUser(user, cb);

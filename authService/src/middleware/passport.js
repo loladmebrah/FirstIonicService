@@ -10,9 +10,7 @@ var opts = {
 }
 
 module.exports = new JwtStrategy(opts, function(jwt_payload, done){
-    console.log("payload");
-    console.log(jwt_payload);
-    UserP.findUser(jwt_payload, function(err, user){
+    UserP.identifyU(jwt_payload, function(err, user){
         if (err){
             return done(err, false);
         }

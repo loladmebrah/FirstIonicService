@@ -1,8 +1,10 @@
 var queryMaker = require('./../queries/querycontroller');
 var bcrypt = require('bcryptjs');
+var crypto = require('crypto');
 
 class UserP{
     constructor(bodyRequest){
+        this.accountid = this.getUniqueId(64);
         this.email = bodyRequest.email;
         this.accountnumber = bodyRequest.accountnumber;
         this.username = bodyRequest.username;
@@ -41,6 +43,15 @@ class UserP{
         return this._password;
     }
 
+    getUniqueId(len){
+        return crypto
+                .randomBytes(Math.ceil((len * 3) / 4))
+                .toString('base64') // convert to base64 format
+                .slice(0, len) // return required number of characters
+                .replace(/\+/g, '0') // replace '+' with '0'
+                .replace(/\//g, '0') // replace '/' with '0'
+    }
+
     comparePassword(candidatePassword, cb){
         bcrypt.compare(candidatePassword, this.password, (err, isMatch)=>{
             if(err) return cb(err);
@@ -72,8 +83,10 @@ class UserP{
         this.preSave((e)=>{
             if(e){
                 console.log("Error in hash procedure, impossible to register user ", e);
+                callback(e, "Error in hash procedure, impossible to register user ");
             }else{
-                let userResponse = {email: this.email, accountnumber: this.accountnumber, username: this.username, password: this.password};
+                let userResponse = {email: this.email, accountid: this.accountid, accountnumber: this.accountnumber, username: this.username, password: this.password};
+                console.log(userResponse);
                 queryMaker.InsertUser(userResponse, ( err, res )=>{
                     if(err)
                         callback(err, res);
@@ -84,34 +97,6 @@ class UserP{
         });
     }
 }
-
-//exporta como funciones independientes:
-/*
-    encontrar usuario
-    crear clase
-*/
-
-//exporta como metodos de clase:
-/*
-    constructor
-    save
-    compare password
-*/
-/*
-{
-"email":"222222",
-"username":"222222",
-"accountNumber":"222222",
-"password":"222222"
-}
-
-{ 
-"username":"victory", 
-"password":"defeat", 
-"accountNumber":"FA445G58", 
-"email": "test@test.com"
-}
-*/
 
 function searchUser(user, cb){
     queryMaker.Find(user, (e, res)=>{
@@ -128,12 +113,24 @@ function userExists(user, cb){
     });
 }
 
+function identifyUser(user, cb){
+    queryMaker.Identify(user, (e, res)=>{
+        if(res.length>0)
+            cb(e, res[0]);
+        else
+            cb(e, null);
+    });
+}
+
 module.exports = {
     findUser: function(userName, callback){
         userExists(userName, callback);
     },
     getUser: function(userName, callback){
         searchUser(userName, callback);
+    },
+    identifyU: function(username, callback){
+        identifyUser(username, callback);
     },
     createUser: function(bodRequest){
         return new UserP(bodRequest);
